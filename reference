@@ -1,0 +1,103 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+
+export default function Portfolio() {
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Header */}
+      <header className="p-6 flex justify-between items-center border-b">
+        <h1 className="text-xl font-semibold tracking-tight">My Portfolio</h1>
+        <nav className="space-x-6 text-sm">
+          <a href="#about" className="hover:underline">About</a>
+          <a href="#projects" className="hover:underline">Projects</a>
+          <a href="#workwithme" className="hover:underline">Work With Me</a>
+        </nav>
+      </header>
+
+      {/* About Me */}
+      <section id="about" className="max-w-3xl mx-auto py-16 px-6">
+        <h2 className="text-2xl font-semibold mb-4">About Me</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          I specialize in AI-driven workflows and computational design, building intelligent tools that enhance engineering and architectural processes.
+          My expertise spans large language models, structural analysis, and parametric design automation.
+        </p>
+      </section>
+
+      <Separator className="max-w-5xl mx-auto" />
+
+      {/* Projects */}
+      <section id="projects" className="py-16 px-6">
+        <h2 className="text-2xl font-semibold mb-8 text-center">Projects</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+
+          <Card>
+            <CardHeader>
+              <CardTitle>ETABS AI Copilot</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                A co-creational interface that helps you interact seamlessly with ETABS for structural analysis tasks.
+              </p>
+              <div className="bg-muted h-40 flex items-center justify-center rounded-md text-sm text-muted-foreground">[ Demo / Image Placeholder ]</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Design Code Chat Bot</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                A retrieval-augmented chatbot that allows quick lookup of design code information like ASCE.
+              </p>
+              <div className="bg-muted h-40 flex items-center justify-center rounded-md text-sm text-muted-foreground">[ Demo / Image Placeholder ]</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>ETABS Doc MCP Server</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                An MCP server that enables LLMs to look up ETABS API docs contextually while solving engineering tasks.
+              </p>
+              <div className="bg-muted h-40 flex items-center justify-center rounded-md text-sm text-muted-foreground">[ Demo / Image Placeholder ]</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Grasshopper Pragmatic Script</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                A parametric design automation script built in Grasshopper for streamlined architectural workflows.
+              </p>
+              <div className="bg-muted h-40 flex items-center justify-center rounded-md text-sm text-muted-foreground">[ Demo / Image Placeholder ]</div>
+            </CardContent>
+          </Card>
+
+        </div>
+      </section>
+
+      <Separator className="max-w-5xl mx-auto" />
+
+      {/* Work With Me */}
+      <section id="workwithme" className="max-w-3xl mx-auto py-16 px-6">
+        <h2 className="text-2xl font-semibold mb-4">Work With Me</h2>
+        <p className="text-muted-foreground mb-6">
+          Interested in collaborating or need a custom AI-driven tool for your engineering or design project? Let’s build something impactful together.
+        </p>
+        <Button size="lg">Get in Touch</Button>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t p-6 text-center text-sm text-muted-foreground">
+        © {new Date().getFullYear()} My Portfolio. All rights reserved.
+      </footer>
+    </div>
+  );
+}
+

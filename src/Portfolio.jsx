@@ -13,27 +13,6 @@ export default function Portfolio() {
 
   const projects = [
     {
-      title: "ETABS AI Copilot",
-      description: "A production-ready Model Context Protocol (MCP) server that integrates Claude Desktop with ETABS software, enabling complete structural analysis workflows through natural language commands.",
-      image: "./images/etabs-copilot-demo.png",
-      detailedDescription: {
-        overview: "The ETABS AI Copilot is a revolutionary MCP server that bridges Claude Desktop with ETABS structural analysis software, allowing engineers to perform complete structural analysis workflows through conversational AI. This tool transforms how structural engineers interact with complex analysis software by enabling natural language commands for modeling, analysis, and result interpretation.",
-        features: [
-          "Natural language interface for complete ETABS workflows",
-          "Automated model creation with materials, sections, and elements",
-          "Intelligent load pattern creation and application",
-          "Real-time analysis execution and progress monitoring",
-          "Automated result extraction and interpretation",
-          "Context-aware state management with validation logic",
-          "Comprehensive error handling with user-friendly messages",
-          "Support for multi-story frame and complex structural systems"
-        ],
-        technologies: ["Python", "ETABS COM API", "Model Context Protocol (MCP)", "Claude Desktop", "Windows COM", "Pytest"],
-        challenges: "The primary challenge was creating a robust bridge between AI language models and the complex ETABS COM API while maintaining reliability for production structural analysis work. This required developing comprehensive error handling, state validation, and ensuring the AI could understand and execute complex structural engineering workflows accurately.",
-        outcome: "Successfully deployed as a production-ready tool with 100% test coverage and 18 complete MCP tools. Enables structural engineers to reduce modeling time by 60% and perform complex analysis workflows through simple conversational commands, making structural analysis more accessible and efficient."
-      }
-    },
-    {
       title: "ETABS Sync CLI Tool",
       description: "A professional-grade command-line tool for synchronizing changes between different versions of ETABS structural models using Git-like three-way merge algorithms, enabling collaborative structural engineering workflows.",
       image: "./CLI_Sync_demo.mp4",
@@ -69,6 +48,27 @@ export default function Portfolio() {
           "Foundation for future native ETABS plugin development for even better integration"
         ],
         technologies: ["Python 3.8+", "ETABS COM API", "Windows COM", "dataclasses", "psutil", "Click CLI", "PyTest", "YAML/JSON Configuration"]
+      }
+    },
+    {
+      title: "ETABS AI Copilot",
+      description: "A production-ready Model Context Protocol (MCP) server that integrates Claude Desktop with ETABS software, enabling complete structural analysis workflows through natural language commands.",
+      image: "./images/etabs-copilot-demo.png",
+      detailedDescription: {
+        overview: "The ETABS AI Copilot is a revolutionary MCP server that bridges Claude Desktop with ETABS structural analysis software, allowing engineers to perform complete structural analysis workflows through conversational AI. This tool transforms how structural engineers interact with complex analysis software by enabling natural language commands for modeling, analysis, and result interpretation.",
+        features: [
+          "Natural language interface for complete ETABS workflows",
+          "Automated model creation with materials, sections, and elements",
+          "Intelligent load pattern creation and application",
+          "Real-time analysis execution and progress monitoring",
+          "Automated result extraction and interpretation",
+          "Context-aware state management with validation logic",
+          "Comprehensive error handling with user-friendly messages",
+          "Support for multi-story frame and complex structural systems"
+        ],
+        technologies: ["Python", "ETABS COM API", "Model Context Protocol (MCP)", "Claude Desktop", "Windows COM", "Pytest"],
+        challenges: "The primary challenge was creating a robust bridge between AI language models and the complex ETABS COM API while maintaining reliability for production structural analysis work. This required developing comprehensive error handling, state validation, and ensuring the AI could understand and execute complex structural engineering workflows accurately.",
+        outcome: "Successfully deployed as a production-ready tool with 100% test coverage and 18 complete MCP tools. Enables structural engineers to reduce modeling time by 60% and perform complex analysis workflows through simple conversational commands, making structural analysis more accessible and efficient."
       }
     },
     {
@@ -188,7 +188,18 @@ export default function Portfolio() {
               <Card key={index} className="group hover:shadow-lg transition-shadow">
                 <CardHeader className="p-0">
                   <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
-                    {project.title === "ETABS AI Copilot" ? (
+                    {project.title === "ETABS Sync CLI Tool" ? (
+                      <video 
+                        src="./CLI_Sync_demo.mp4"
+                        className="w-full h-full object-cover"
+                        controls
+                        muted
+                        loop
+                        preload="metadata"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : project.title === "ETABS AI Copilot" ? (
                       <video 
                         src="./images/etabs-copilot-demo.mp4"
                         className="w-full h-full object-cover"
@@ -205,17 +216,6 @@ export default function Portfolio() {
                         controls
                         muted
                         loop
-                      >
-                        Your browser does not support the video tag.
-                      </video>
-                    ) : project.title === "ETABS Sync CLI Tool" ? (
-                      <video 
-                        src="./CLI_Sync_demo.mp4"
-                        className="w-full h-full object-cover"
-                        controls
-                        muted
-                        loop
-                        preload="metadata"
                       >
                         Your browser does not support the video tag.
                       </video>
@@ -336,7 +336,18 @@ export default function Portfolio() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-2xl font-bold mb-4">{selectedProject.title}</h3>
-                {selectedProject.title === "ETABS AI Copilot" ? (
+                {selectedProject.title === "ETABS Sync CLI Tool" ? (
+                  <video 
+                    src="./CLI_Sync_demo.mp4"
+                    className="w-full h-auto rounded-lg mb-4"
+                    controls
+                    muted
+                    loop
+                    preload="metadata"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                ) : selectedProject.title === "ETABS AI Copilot" ? (
                   <video 
                     src="./images/etabs-copilot-demo.mp4"
                     className="w-full h-auto rounded-lg mb-4"
@@ -353,17 +364,6 @@ export default function Portfolio() {
                     controls
                     muted
                     loop
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                ) : selectedProject.title === "ETABS Sync CLI Tool" ? (
-                  <video 
-                    src="./CLI_Sync_demo.mp4"
-                    className="w-full h-auto rounded-lg mb-4"
-                    controls
-                    muted
-                    loop
-                    preload="metadata"
                   >
                     Your browser does not support the video tag.
                   </video>

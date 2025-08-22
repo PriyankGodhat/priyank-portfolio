@@ -1,13 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { Button } from "./components/ui/button";
 import { Separator } from "./components/ui/separator";
-import { Modal, ModalContent } from "./components/ui/modal";
+import { Modal, ModalContent, InterestForm } from "./components/ui/modal";
 import { Github, Linkedin, Mail, Info } from "lucide-react";
 import { useState } from "react";
 
 export default function Portfolio() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInterestFormOpen, setIsInterestFormOpen] = useState(false);
+  const [interestProjectTitle, setInterestProjectTitle] = useState("");
 
   const projects = [
     {
@@ -121,6 +123,25 @@ export default function Portfolio() {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedProject(null);
+  };
+
+  const openInterestForm = (projectTitle) => {
+    setInterestProjectTitle(projectTitle);
+    setIsInterestFormOpen(true);
+  };
+
+  const closeInterestForm = () => {
+    setIsInterestFormOpen(false);
+    setInterestProjectTitle("");
+  };
+
+  const handleInterestSubmit = (formData) => {
+    // Here you can handle the form submission
+    // For now, we'll just log it to console
+    console.log("Interest form submitted:", {
+      project: interestProjectTitle,
+      ...formData
+    });
   };
 
   return (
@@ -430,18 +451,41 @@ export default function Portfolio() {
               </div>
 
               <div className="flex gap-3 pt-4">
-                <Button className="flex-1">
-                  <Github className="w-4 h-4 mr-2" />
-                  View Source Code
-                </Button>
-                <Button variant="outline" className="flex-1">
-                  Live Demo
-                </Button>
+                {selectedProject.title === "ETABS AI Copilot" || selectedProject.title === "ETABS Sync CLI Tool" ? (
+                  <Button 
+                    className="w-full"
+                    onClick={() => {
+                      closeModal();
+                      openInterestForm(selectedProject.title);
+                    }}
+                  >
+                    Interested in trying
+                  </Button>
+                ) : (
+                  <>
+                    <Button className="flex-1">
+                      <Github className="w-4 h-4 mr-2" />
+                      View Source Code
+                    </Button>
+                    <Button variant="outline" className="flex-1">
+                      Live Demo
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </ModalContent>
         )}
       </Modal>
+
+      {/* Interest Form Modal */}
+      {isInterestFormOpen && (
+        <InterestForm
+          projectTitle={interestProjectTitle}
+          onClose={closeInterestForm}
+          onSubmit={handleInterestSubmit}
+        />
+      )}
     </div>
   );
 }

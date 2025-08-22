@@ -13,7 +13,7 @@ export default function Portfolio() {
     {
       title: "ETABS AI Copilot",
       description: "A production-ready Model Context Protocol (MCP) server that integrates Claude Desktop with ETABS software, enabling complete structural analysis workflows through natural language commands.",
-      image: "/images/etabs-copilot-demo.png",
+      image: "./images/etabs-copilot-demo.png",
       detailedDescription: {
         overview: "The ETABS AI Copilot is a revolutionary MCP server that bridges Claude Desktop with ETABS structural analysis software, allowing engineers to perform complete structural analysis workflows through conversational AI. This tool transforms how structural engineers interact with complex analysis software by enabling natural language commands for modeling, analysis, and result interpretation.",
         features: [
@@ -34,7 +34,7 @@ export default function Portfolio() {
     {
       title: "ETABS Sync CLI Tool",
       description: "A professional-grade command-line tool for synchronizing changes between different versions of ETABS structural models using Git-like three-way merge algorithms, enabling collaborative structural engineering workflows.",
-      image: "/CLI_Sync_demo.mp4",
+      image: "./CLI_Sync_demo.mp4",
       detailedDescription: {
         overview: "The ETABS Sync CLI Tool revolutionizes structural engineering collaboration by providing Git-like version control capabilities for ETABS models. This professional-grade tool enables multiple engineers to work on the same structural model simultaneously and safely merge their changes, eliminating the manual, error-prone process that currently exists in structural engineering workflows.",
         howToUse: [
@@ -72,7 +72,7 @@ export default function Portfolio() {
     {
       title: "ETABS API Script Writing AI Agent",
       description: "An intelligent MCP server that enables AI models to perform semantic searches on ETABS documentation, helping engineers write API scripts through natural language queries and contextual documentation lookup.",
-      image: "/images/etabs-docs-mcp-demo.mp4",
+      image: "./images/etabs-docs-mcp-demo.mp4",
       detailedDescription: {
         overview: "The ETABS Documentation Assistant is a sophisticated Model Context Protocol (MCP) server that revolutionizes how structural engineers access and utilize ETABS API documentation. By leveraging local sentence transformer models and ChromaDB vector storage, this tool enables AI models like Claude to perform intelligent semantic searches on ETABS documentation, making API script writing more accessible and efficient.",
         features: [
@@ -93,7 +93,7 @@ export default function Portfolio() {
     {
       title: "Structural Code Chatbot",
       description: "A Retrieval-Augmented Generation (RAG) chatbot that allows structural engineers to quickly look up information from AISC, ASCE, and ACI codes with detailed accuracy and precise references.",
-      image: "/images/structural-code-chatbot.png",
+      image: "./images/structural-code-chatbot.png",
       detailedDescription: {
         overview: "The Structural Code Chatbot is a specialized RAG-based AI assistant designed specifically for structural engineers who need quick, accurate access to building code information. This tool transforms how engineers interact with complex structural codes by providing instant, contextual answers with precise references to AISC 360, ASCE 7, and ACI 318 standards.",
         features: [
@@ -169,7 +169,7 @@ export default function Portfolio() {
                   <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
                     {project.title === "ETABS AI Copilot" ? (
                       <video 
-                        src="/images/etabs-copilot-demo.mp4"
+                        src="./images/etabs-copilot-demo.mp4"
                         className="w-full h-full object-cover"
                         controls
                         muted
@@ -179,7 +179,7 @@ export default function Portfolio() {
                       </video>
                     ) : project.title === "ETABS API Script Writing AI Agent" ? (
                       <video 
-                        src="/images/etabs-docs-mcp-demo.mp4"
+                        src="./images/etabs-docs-mcp-demo.mp4"
                         className="w-full h-full object-cover"
                         controls
                         muted
@@ -189,7 +189,7 @@ export default function Portfolio() {
                       </video>
                     ) : project.title === "ETABS Sync CLI Tool" ? (
                       <video 
-                        src="/CLI_Sync_demo.mp4"
+                        src="./CLI_Sync_demo.mp4"
                         className="w-full h-full object-cover"
                         controls
                         muted
@@ -258,7 +258,7 @@ export default function Portfolio() {
             <div className="flex justify-center">
               <div className="w-64 h-64 rounded-full overflow-hidden">
                 <img 
-                  src="/images/profile-photo.jpeg" 
+                  src="./images/profile-photo.jpeg" 
                   alt="Priyank Godhat"
                   className="w-full h-full object-cover"
                 />
@@ -317,7 +317,7 @@ export default function Portfolio() {
                 <h3 className="text-2xl font-bold mb-4">{selectedProject.title}</h3>
                 {selectedProject.title === "ETABS AI Copilot" ? (
                   <video 
-                    src="/images/etabs-copilot-demo.mp4"
+                    src="./images/etabs-copilot-demo.mp4"
                     className="w-full h-auto rounded-lg mb-4"
                     controls
                     muted
@@ -327,7 +327,7 @@ export default function Portfolio() {
                   </video>
                 ) : selectedProject.title === "ETABS API Script Writing AI Agent" ? (
                   <video 
-                    src="/images/etabs-docs-mcp-demo.mp4"
+                    src="./images/etabs-docs-mcp-demo.mp4"
                     className="w-full h-auto rounded-lg mb-4"
                     controls
                     muted
@@ -337,7 +337,7 @@ export default function Portfolio() {
                   </video>
                 ) : selectedProject.title === "ETABS Sync CLI Tool" ? (
                   <video 
-                    src="/CLI_Sync_demo.mp4"
+                    src="./CLI_Sync_demo.mp4"
                     className="w-full h-auto rounded-lg mb-4"
                     controls
                     muted

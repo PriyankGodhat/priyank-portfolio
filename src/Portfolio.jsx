@@ -451,7 +451,7 @@ export default function Portfolio() {
               </div>
 
               <div className="flex gap-3 pt-4">
-                {selectedProject.title === "ETABS AI Copilot" || selectedProject.title === "ETABS Sync CLI Tool" ? (
+                {selectedProject.title === "ETABS AI Copilot" || selectedProject.title === "ETABS Sync CLI Tool" || selectedProject.title === "Structural Code Chatbot" ? (
                   <Button 
                     className="w-full"
                     onClick={() => {
@@ -460,6 +460,16 @@ export default function Portfolio() {
                     }}
                   >
                     Interested in trying
+                  </Button>
+                ) : selectedProject.title === "ETABS API Script Writing AI Agent" ? (
+                  <Button 
+                    className="w-full"
+                    asChild
+                  >
+                    <a href="https://github.com/PriyankGodhat/etabs-mcp-server-local-embeddings" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                      <Github className="w-4 h-4 mr-2" />
+                      View Source Code
+                    </a>
                   </Button>
                 ) : (
                   <>

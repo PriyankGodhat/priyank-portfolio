@@ -95,6 +95,7 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
 
     try {
       // Submit to Formspree
+      console.log('Creating FormData object...')
       const formDataToSend = new FormData()
       formDataToSend.append('name', formData.name)
       formDataToSend.append('email', formData.email)
@@ -111,6 +112,7 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
         project: projectTitle
       })
 
+      console.log('Making fetch request to Formspree...')
       const response = await fetch('https://formspree.io/f/xdklekey', {
         method: 'POST',
         body: formDataToSend,
@@ -119,6 +121,7 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
         }
       })
 
+      console.log('Fetch completed successfully!')
       console.log('Formspree response status:', response.status)
       console.log('Formspree response ok:', response.ok)
 
@@ -126,6 +129,7 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
       console.log('Formspree response data:', responseData)
 
       if (response.ok) {
+        console.log('Form submission successful!')
         alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
         onSubmit(formData)
         setIsSubmitting(false)
@@ -134,7 +138,45 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
         throw new Error(responseData.error || `Form submission failed with status ${response.status}`)
       }
     } catch (error) {
-      console.error('Form submission error:', error)
+      console.error('=== FORM SUBMISSION ERROR ===')
+      console.error('Error details:', error)
+      console.error('Error message:', error.message)
+      console.error('Error stack:', error.stack)
+      
+      // Try alternative approach with JSON data
+      console.log('Attempting alternative JSON submission...')
+      try {
+        const jsonResponse = await fetch('https://formspree.io/f/xdklekey', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            company: formData.company || '',
+            role: formData.role || '',
+            project: projectTitle,
+            _subject: `New Interest Form Submission for ${projectTitle}`
+          })
+        })
+        
+        console.log('JSON submission response:', jsonResponse.status)
+        const jsonData = await jsonResponse.json()
+        console.log('JSON submission data:', jsonData)
+        
+        if (jsonResponse.ok) {
+          alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
+          onSubmit(formData)
+          setIsSubmitting(false)
+          onClose()
+          return
+        }
+      } catch (jsonError) {
+        console.error('JSON submission also failed:', jsonError)
+      }
+      
       alert('There was an error submitting your form. Please try again or contact us directly.')
       setIsSubmitting(false)
     }

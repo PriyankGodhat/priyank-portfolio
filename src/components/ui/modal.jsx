@@ -97,6 +97,14 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
       formDataToSend.append('project', projectTitle)
       formDataToSend.append('_subject', `New Interest Form Submission for ${projectTitle}`)
 
+      console.log('Submitting form data to Formspree:', {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        role: formData.role,
+        project: projectTitle
+      })
+
       const response = await fetch('https://formspree.io/f/xdklekey', {
         method: 'POST',
         body: formDataToSend,
@@ -105,14 +113,19 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
         }
       })
 
+      console.log('Formspree response status:', response.status)
+      console.log('Formspree response ok:', response.ok)
+
+      const responseData = await response.json()
+      console.log('Formspree response data:', responseData)
+
       if (response.ok) {
         alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
         onSubmit(formData)
         setIsSubmitting(false)
         onClose()
       } else {
-        const data = await response.json()
-        throw new Error(data.error || 'Form submission failed')
+        throw new Error(responseData.error || `Form submission failed with status ${response.status}`)
       }
     } catch (error) {
       console.error('Form submission error:', error)

@@ -72,6 +72,10 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
     e.preventDefault()
     setIsSubmitting(true)
     
+    console.log('=== FORM SUBMISSION STARTED ===')
+    console.log('Form data:', formData)
+    console.log('Project title:', projectTitle)
+    
     // Simple validation
     if (!formData.name || !formData.email) {
       alert("Please fill in your name and email address")
@@ -86,6 +90,8 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
       setIsSubmitting(false)
       return
     }
+
+    console.log('Validation passed, attempting Formspree submission...')
 
     try {
       // Submit to Formspree

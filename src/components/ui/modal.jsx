@@ -68,7 +68,7 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
     
@@ -87,13 +87,38 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
       return
     }
 
-    // Simulate form submission
-    setTimeout(() => {
-      alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
-      onSubmit(formData)
+    try {
+      // Submit to Formspree
+      const formDataToSend = new FormData()
+      formDataToSend.append('name', formData.name)
+      formDataToSend.append('email', formData.email)
+      formDataToSend.append('company', formData.company || '')
+      formDataToSend.append('role', formData.role || '')
+      formDataToSend.append('project', projectTitle)
+      formDataToSend.append('_subject', `New Interest Form Submission for ${projectTitle}`)
+
+      const response = await fetch('https://formspree.io/f/xdklekey', {
+        method: 'POST',
+        body: formDataToSend,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+
+      if (response.ok) {
+        alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
+        onSubmit(formData)
+        setIsSubmitting(false)
+        onClose()
+      } else {
+        const data = await response.json()
+        throw new Error(data.error || 'Form submission failed')
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+      alert('There was an error submitting your form. Please try again or contact us directly.')
       setIsSubmitting(false)
-      onClose()
-    }, 1000)
+    }
   }
 
   return (

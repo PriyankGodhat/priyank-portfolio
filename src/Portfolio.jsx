@@ -136,9 +136,9 @@ export default function Portfolio() {
   };
 
   const handleInterestSubmit = (formData) => {
-    // Here you can handle the form submission
-    // For now, we'll just log it to console
-    console.log("Interest form submitted:", {
+    // Form data is now handled by Formspree in the InterestForm component
+    // This callback is used for any additional client-side processing if needed
+    console.log("Interest form submitted successfully:", {
       project: interestProjectTitle,
       ...formData
     });

@@ -68,12 +68,12 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
     }))
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = (e) => {
     setIsSubmitting(true)
     
     // Simple validation
     if (!formData.name || !formData.email) {
+      e.preventDefault()
       alert("Please fill in your name and email address")
       setIsSubmitting(false)
       return
@@ -82,42 +82,25 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
+      e.preventDefault()
       alert("Please enter a valid email address")
       setIsSubmitting(false)
       return
     }
 
-    // Use native form submission with fetch
-    try {
-      const formElement = e.target
-      const formData = new FormData(formElement)
-      
-      const response = await fetch('https://formspree.io/f/myzdenwp', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
+    // If validation passes, let the form submit naturally to Formspree
+    // Show success message and close modal after a brief delay
+    setTimeout(() => {
+      alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
+      onSubmit({
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        role: formData.role
       })
-
-      if (response.ok) {
-        alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
-        onSubmit({
-          name: formData.get('name'),
-          email: formData.get('email'),
-          company: formData.get('company'),
-          role: formData.get('role')
-        })
-        setIsSubmitting(false)
-        onClose()
-      } else {
-        throw new Error('Form submission failed')
-      }
-    } catch (error) {
-      console.error('Form submission error:', error)
-      alert('There was an error submitting your form. Please try again or contact us directly.')
       setIsSubmitting(false)
-    }
+      onClose()
+    }, 1000)
   }
 
   return (

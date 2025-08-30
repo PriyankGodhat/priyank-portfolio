@@ -9,13 +9,19 @@
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist"
   },
-  "keywords": ["portfolio", "react", "vite", "tailwind"],
+  "keywords": [
+    "portfolio",
+    "react",
+    "vite",
+    "tailwind"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@formspree/react": "^3.0.0",
+    "lucide-react": "^0.263.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "lucide-react": "^0.263.1"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

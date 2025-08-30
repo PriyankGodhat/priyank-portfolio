@@ -1,6 +1,7 @@
 import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "./button"
+import { useForm, ValidationError } from '@formspree/react'
 
 const Modal = ({ isOpen, onClose, children }) => {
   React.useEffect(() => {
@@ -51,57 +52,24 @@ const ModalContent = ({ className = "", ...props }) => (
 )
 
 const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
-  const [formData, setFormData] = React.useState({
-    name: "",
-    email: "",
-    company: "",
-    role: ""
-  })
+  const [state, handleSubmit] = useForm("myzdenwp")
 
-  const [isSubmitting, setIsSubmitting] = React.useState(false)
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const handleSubmit = (e) => {
-    setIsSubmitting(true)
-    
-    // Simple validation
-    if (!formData.name || !formData.email) {
-      e.preventDefault()
-      alert("Please fill in your name and email address")
-      setIsSubmitting(false)
-      return
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(formData.email)) {
-      e.preventDefault()
-      alert("Please enter a valid email address")
-      setIsSubmitting(false)
-      return
-    }
-
-    // If validation passes, let the form submit naturally to Formspree
-    // Show success message and close modal after a brief delay
-    setTimeout(() => {
+  // Handle successful submission
+  React.useEffect(() => {
+    if (state.succeeded) {
       alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
       onSubmit({
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        role: formData.role
+        name: "Form submitted successfully",
+        email: "via Formspree",
+        company: "",
+        role: ""
       })
-      setIsSubmitting(false)
-      onClose()
-    }, 1000)
-  }
+      // Close modal after showing success message
+      setTimeout(() => {
+        onClose()
+      }, 2000)
+    }
+  }, [state.succeeded, projectTitle, onSubmit, onClose])
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center">
@@ -118,12 +86,7 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
           </Button>
         </div>
         
-        <form 
-          action="https://formspree.io/f/myzdenwp"
-          method="POST"
-          onSubmit={handleSubmit} 
-          className="p-6 space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-4">
               Interested in trying <strong>{projectTitle}</strong>? Please fill out your information below.
@@ -142,11 +105,15 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               type="text"
               id="name"
               name="name"
-              value={formData.name}
-              onChange={handleInputChange}
               required
               className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="Your full name"
+            />
+            <ValidationError 
+              prefix="Name" 
+              field="name"
+              errors={state.errors}
+              className="text-sm text-red-500 mt-1"
             />
           </div>
 
@@ -158,11 +125,15 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
-              onChange={handleInputChange}
               required
               className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="your.email@company.com"
+            />
+            <ValidationError 
+              prefix="Email" 
+              field="email"
+              errors={state.errors}
+              className="text-sm text-red-500 mt-1"
             />
           </div>
 
@@ -174,10 +145,14 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               type="text"
               id="company"
               name="company"
-              value={formData.company}
-              onChange={handleInputChange}
               className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="Your company name"
+            />
+            <ValidationError 
+              prefix="Company" 
+              field="company"
+              errors={state.errors}
+              className="text-sm text-red-500 mt-1"
             />
           </div>
 
@@ -189,10 +164,14 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               type="text"
               id="role"
               name="role"
-              value={formData.role}
-              onChange={handleInputChange}
               className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="e.g. Structural Engineer, Project Manager"
+            />
+            <ValidationError 
+              prefix="Role" 
+              field="role"
+              errors={state.errors}
+              className="text-sm text-red-500 mt-1"
             />
           </div>
 
@@ -202,18 +181,24 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               variant="outline"
               onClick={onClose}
               className="flex-1"
-              disabled={isSubmitting}
+              disabled={state.submitting}
             >
               Cancel
             </Button>
             <Button
               type="submit"
               className="flex-1"
-              disabled={isSubmitting}
+              disabled={state.submitting}
             >
-              {isSubmitting ? "Submitting..." : "Submit Interest"}
+              {state.submitting ? "Submitting..." : "Submit Interest"}
             </Button>
           </div>
+
+          {state.succeeded && (
+            <div className="text-green-600 text-sm text-center">
+              ✅ Thank you! Your interest has been submitted successfully.
+            </div>
+          )}
         </form>
       </div>
     </div>

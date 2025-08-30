@@ -72,10 +72,6 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
     e.preventDefault()
     setIsSubmitting(true)
     
-    console.log('=== FORM SUBMISSION STARTED ===')
-    console.log('Form data:', formData)
-    console.log('Project title:', projectTitle)
-    
     // Simple validation
     if (!formData.name || !formData.email) {
       alert("Please fill in your name and email address")
@@ -91,92 +87,34 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
       return
     }
 
-    console.log('Validation passed, attempting Formspree submission...')
-
+    // Use native form submission with fetch
     try {
-      // Submit to Formspree
-      console.log('Creating FormData object...')
-      const formDataToSend = new FormData()
-      formDataToSend.append('name', formData.name)
-      formDataToSend.append('email', formData.email)
-      formDataToSend.append('company', formData.company || '')
-      formDataToSend.append('role', formData.role || '')
-      formDataToSend.append('project', projectTitle)
-      formDataToSend.append('_subject', `New Interest Form Submission for ${projectTitle}`)
-
-      console.log('Submitting form data to Formspree:', {
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        role: formData.role,
-        project: projectTitle
-      })
-
-      console.log('Making fetch request to Formspree...')
-      const response = await fetch('https://formspree.io/f/xdklekey', {
+      const formElement = e.target
+      const formData = new FormData(formElement)
+      
+      const response = await fetch('https://formspree.io/f/myzdenwp', {
         method: 'POST',
-        body: formDataToSend,
+        body: formData,
         headers: {
           'Accept': 'application/json'
         }
       })
 
-      console.log('Fetch completed successfully!')
-      console.log('Formspree response status:', response.status)
-      console.log('Formspree response ok:', response.ok)
-
-      const responseData = await response.json()
-      console.log('Formspree response data:', responseData)
-
       if (response.ok) {
-        console.log('Form submission successful!')
         alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
-        onSubmit(formData)
+        onSubmit({
+          name: formData.get('name'),
+          email: formData.get('email'),
+          company: formData.get('company'),
+          role: formData.get('role')
+        })
         setIsSubmitting(false)
         onClose()
       } else {
-        throw new Error(responseData.error || `Form submission failed with status ${response.status}`)
+        throw new Error('Form submission failed')
       }
     } catch (error) {
-      console.error('=== FORM SUBMISSION ERROR ===')
-      console.error('Error details:', error)
-      console.error('Error message:', error.message)
-      console.error('Error stack:', error.stack)
-      
-      // Try alternative approach with JSON data
-      console.log('Attempting alternative JSON submission...')
-      try {
-        const jsonResponse = await fetch('https://formspree.io/f/xdklekey', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            company: formData.company || '',
-            role: formData.role || '',
-            project: projectTitle,
-            _subject: `New Interest Form Submission for ${projectTitle}`
-          })
-        })
-        
-        console.log('JSON submission response:', jsonResponse.status)
-        const jsonData = await jsonResponse.json()
-        console.log('JSON submission data:', jsonData)
-        
-        if (jsonResponse.ok) {
-          alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
-          onSubmit(formData)
-          setIsSubmitting(false)
-          onClose()
-          return
-        }
-      } catch (jsonError) {
-        console.error('JSON submission also failed:', jsonError)
-      }
-      
+      console.error('Form submission error:', error)
       alert('There was an error submitting your form. Please try again or contact us directly.')
       setIsSubmitting(false)
     }
@@ -197,12 +135,21 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
           </Button>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form 
+          action="https://formspree.io/f/myzdenwp"
+          method="POST"
+          onSubmit={handleSubmit} 
+          className="p-6 space-y-4"
+        >
           <div>
             <p className="text-sm text-muted-foreground mb-4">
               Interested in trying <strong>{projectTitle}</strong>? Please fill out your information below.
             </p>
           </div>
+
+          {/* Hidden fields for Formspree */}
+          <input type="hidden" name="project" value={projectTitle} />
+          <input type="hidden" name="_subject" value={`New Interest Form Submission for ${projectTitle}`} />
 
           <div>
             <label htmlFor="name" className="block text-sm font-medium mb-1">

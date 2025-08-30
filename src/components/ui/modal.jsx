@@ -52,11 +52,27 @@ const ModalContent = ({ className = "", ...props }) => (
 )
 
 const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
-  const [state, handleSubmit] = useForm("myzdenwp")
+  const [state, handleSubmit] = useForm("mrbaqbzr")
+
+  // Debug form submission
+  const debugHandleSubmit = (e) => {
+    console.log('=== FORM SUBMISSION DEBUG ===')
+    console.log('Form event:', e)
+    console.log('Form data before submission:', new FormData(e.target))
+    console.log('Formspree state before:', state)
+    console.log('Calling handleSubmit...')
+    
+    const result = handleSubmit(e)
+    console.log('handleSubmit result:', result)
+    
+    return result
+  }
 
   // Handle successful submission
   React.useEffect(() => {
+    console.log('Formspree state changed:', state)
     if (state.succeeded) {
+      console.log('Form submission succeeded!')
       alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
       onSubmit({
         name: "Form submitted successfully",
@@ -69,7 +85,7 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
         onClose()
       }, 2000)
     }
-  }, [state.succeeded, projectTitle, onSubmit, onClose])
+  }, [state.succeeded, state.submitting, state.errors, projectTitle, onSubmit, onClose])
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center">
@@ -86,7 +102,7 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
           </Button>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={debugHandleSubmit} className="p-6 space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-4">
               Interested in trying <strong>{projectTitle}</strong>? Please fill out your information below.

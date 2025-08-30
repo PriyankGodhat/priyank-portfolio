@@ -1,7 +1,6 @@
 import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "./button"
-import { useForm, ValidationError } from '@formspree/react'
 
 const Modal = ({ isOpen, onClose, children }) => {
   React.useEffect(() => {
@@ -52,40 +51,70 @@ const ModalContent = ({ className = "", ...props }) => (
 )
 
 const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
-  const [state, handleSubmit] = useForm("mrbaqbzr")
+  const [result, setResult] = React.useState("")
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
 
-  // Debug form submission
-  const debugHandleSubmit = (e) => {
-    console.log('=== FORM SUBMISSION DEBUG ===')
-    console.log('Form event:', e)
-    console.log('Form data before submission:', new FormData(e.target))
-    console.log('Formspree state before:', state)
-    console.log('Calling handleSubmit...')
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setIsSubmitting(true)
+    setResult("Sending....")
     
-    const result = handleSubmit(e)
-    console.log('handleSubmit result:', result)
+    console.log('=== WEB3FORMS SUBMISSION DEBUG ===')
+    console.log('Form event:', event)
+    console.log('Project title:', projectTitle)
     
-    return result
-  }
-
-  // Handle successful submission
-  React.useEffect(() => {
-    console.log('Formspree state changed:', state)
-    if (state.succeeded) {
-      console.log('Form submission succeeded!')
-      alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
-      onSubmit({
-        name: "Form submitted successfully",
-        email: "via Formspree",
-        company: "",
-        role: ""
-      })
-      // Close modal after showing success message
-      setTimeout(() => {
-        onClose()
-      }, 2000)
+    const formData = new FormData(event.target)
+    
+    // Add the access key
+    formData.append("access_key", "2c7f7bf7-7d3d-48ff-8dbb-9657938daf4e")
+    
+    // Log form data for debugging
+    console.log('Form data being sent:')
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value)
     }
-  }, [state.succeeded, state.submitting, state.errors, projectTitle, onSubmit, onClose])
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      })
+
+      const data = await response.json()
+      console.log('Web3Forms response:', data)
+
+      if (data.success) {
+        setResult("Form Submitted Successfully")
+        alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
+        
+        // Call the parent callback with form data
+        const submittedData = {
+          name: formData.get('name'),
+          email: formData.get('email'),
+          company: formData.get('company'),
+          role: formData.get('role')
+        }
+        onSubmit(submittedData)
+        
+        // Close modal after success
+        setTimeout(() => {
+          onClose()
+        }, 2000)
+        
+        event.target.reset()
+      } else {
+        console.log("Error", data)
+        setResult(data.message)
+        alert('There was an error submitting your form. Please try again.')
+      }
+    } catch (error) {
+      console.error('Web3Forms submission error:', error)
+      setResult('Submission failed')
+      alert('There was an error submitting your form. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center">
@@ -102,16 +131,17 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
           </Button>
         </div>
         
-        <form onSubmit={debugHandleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-4">
               Interested in trying <strong>{projectTitle}</strong>? Please fill out your information below.
             </p>
           </div>
 
-          {/* Hidden fields for Formspree */}
+          {/* Hidden fields for Web3Forms */}
+          <input type="hidden" name="access_key" value="2c7f7bf7-7d3d-48ff-8dbb-9657938daf4e" />
+          <input type="hidden" name="subject" value={`New Interest Form Submission for ${projectTitle}`} />
           <input type="hidden" name="project" value={projectTitle} />
-          <input type="hidden" name="_subject" value={`New Interest Form Submission for ${projectTitle}`} />
 
           <div>
             <label htmlFor="name" className="block text-sm font-medium mb-1">
@@ -124,12 +154,6 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               required
               className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="Your full name"
-            />
-            <ValidationError 
-              prefix="Name" 
-              field="name"
-              errors={state.errors}
-              className="text-sm text-red-500 mt-1"
             />
           </div>
 
@@ -145,12 +169,6 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="your.email@company.com"
             />
-            <ValidationError 
-              prefix="Email" 
-              field="email"
-              errors={state.errors}
-              className="text-sm text-red-500 mt-1"
-            />
           </div>
 
           <div>
@@ -163,12 +181,6 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               name="company"
               className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="Your company name"
-            />
-            <ValidationError 
-              prefix="Company" 
-              field="company"
-              errors={state.errors}
-              className="text-sm text-red-500 mt-1"
             />
           </div>
 
@@ -183,12 +195,6 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="e.g. Structural Engineer, Project Manager"
             />
-            <ValidationError 
-              prefix="Role" 
-              field="role"
-              errors={state.errors}
-              className="text-sm text-red-500 mt-1"
-            />
           </div>
 
           <div className="flex gap-3 pt-4">
@@ -197,22 +203,29 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               variant="outline"
               onClick={onClose}
               className="flex-1"
-              disabled={state.submitting}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
             <Button
               type="submit"
               className="flex-1"
-              disabled={state.submitting}
+              disabled={isSubmitting}
             >
-              {state.submitting ? "Submitting..." : "Submit Interest"}
+              {isSubmitting ? "Submitting..." : "Submit Interest"}
             </Button>
           </div>
 
-          {state.succeeded && (
-            <div className="text-green-600 text-sm text-center">
-              ✅ Thank you! Your interest has been submitted successfully.
+          {result && (
+            <div className={`text-sm text-center mt-4 ${
+              result === "Form Submitted Successfully" 
+                ? "text-green-600" 
+                : result === "Sending...." 
+                  ? "text-blue-600" 
+                  : "text-red-500"
+            }`}>
+              {result === "Form Submitted Successfully" && "✅ "}
+              {result}
             </div>
           )}
         </form>

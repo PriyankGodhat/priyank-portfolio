@@ -59,21 +59,8 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
     setIsSubmitting(true)
     setResult("Sending....")
     
-    console.log('=== WEB3FORMS SUBMISSION DEBUG ===')
-    console.log('Form event:', event)
-    console.log('Project title:', projectTitle)
-    
     const formData = new FormData(event.target)
     
-    // Add the access key
-    formData.append("access_key", "2c7f7bf7-7d3d-48ff-8dbb-9657938daf4e")
-    
-    // Log form data for debugging
-    console.log('Form data being sent:')
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value)
-    }
-
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -81,7 +68,6 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
       })
 
       const data = await response.json()
-      console.log('Web3Forms response:', data)
 
       if (data.success) {
         setResult("Form Submitted Successfully")
@@ -104,12 +90,12 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
         event.target.reset()
       } else {
         console.log("Error", data)
-        setResult(data.message)
+        setResult(data.message || "Submission failed")
         alert('There was an error submitting your form. Please try again.')
       }
     } catch (error) {
       console.error('Web3Forms submission error:', error)
-      setResult('Submission failed')
+      setResult('Network error - please check your connection')
       alert('There was an error submitting your form. Please try again.')
     } finally {
       setIsSubmitting(false)

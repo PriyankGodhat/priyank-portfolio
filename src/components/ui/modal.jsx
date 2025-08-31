@@ -51,23 +51,36 @@ const ModalContent = ({ className = "", ...props }) => (
 )
 
 const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
+  console.log('InterestForm component rendered', { projectTitle, onClose, onSubmit })
   const [result, setResult] = React.useState("")
   const [isSubmitting, setIsSubmitting] = React.useState(false)
 
   const handleSubmit = async (event) => {
+    console.log('=== FORM SUBMIT DEBUG ===')
+    console.log('handleSubmit called')
+    console.log('Event:', event)
+    
     event.preventDefault()
     setIsSubmitting(true)
     setResult("Sending....")
     
     const formData = new FormData(event.target)
     
+    console.log('FormData entries:')
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`)
+    }
+    
     try {
+      console.log('About to send fetch request to Web3Forms...')
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         body: formData
       })
 
+      console.log('Fetch response received:', response)
       const data = await response.json()
+      console.log('Response data:', data)
 
       if (data.success) {
         setResult("Form Submitted Successfully")
@@ -117,7 +130,10 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
           </Button>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={(e) => {
+          console.log('Form onSubmit event triggered', e)
+          return handleSubmit(e)
+        }} className="p-6 space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-4">
               Interested in trying <strong>{projectTitle}</strong>? Please fill out your information below.

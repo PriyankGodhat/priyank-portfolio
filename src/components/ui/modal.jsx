@@ -51,68 +51,30 @@ const ModalContent = ({ className = "", ...props }) => (
 )
 
 const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
-  console.log('InterestForm component rendered', { projectTitle, onClose, onSubmit })
-  const [result, setResult] = React.useState("")
-  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const handleEmailClick = () => {
+    const subject = encodeURIComponent(`Interest in ${projectTitle}`)
+    const body = encodeURIComponent(`Hi Priyank,
 
-  const handleSubmit = async (event) => {
-    console.log('=== FORM SUBMIT DEBUG ===')
-    console.log('handleSubmit called')
-    console.log('Event:', event)
-    
-    event.preventDefault()
-    setIsSubmitting(true)
-    setResult("Sending....")
-    
-    const formData = new FormData(event.target)
-    
-    console.log('FormData entries:')
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`)
-    }
-    
-    try {
-      console.log('About to send fetch request to Web3Forms...')
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: formData
-      })
+I'm interested in learning more about ${projectTitle}. 
 
-      console.log('Fetch response received:', response)
-      const data = await response.json()
-      console.log('Response data:', data)
+Please share more details about:
+- How to get started
+- Pricing/licensing information
+- Technical requirements
+- Demo availability
 
-      if (data.success) {
-        setResult("Form Submitted Successfully")
-        alert(`Thank you for your interest in ${projectTitle}! We'll be in touch soon.`)
-        
-        // Call the parent callback with form data
-        const submittedData = {
-          name: formData.get('name'),
-          email: formData.get('email'),
-          company: formData.get('company'),
-          role: formData.get('role')
-        }
-        onSubmit(submittedData)
-        
-        // Close modal after success
-        setTimeout(() => {
-          onClose()
-        }, 2000)
-        
-        event.target.reset()
-      } else {
-        console.log("Error", data)
-        setResult(data.message || "Submission failed")
-        alert('There was an error submitting your form. Please try again.')
-      }
-    } catch (error) {
-      console.error('Web3Forms submission error:', error)
-      setResult('Network error - please check your connection')
-      alert('There was an error submitting your form. Please try again.')
-    } finally {
-      setIsSubmitting(false)
-    }
+Best regards,
+[Your Name]
+[Your Company]
+[Your Role]`)
+    
+    const mailtoLink = `mailto:priyankgodhat121@gmail.com?subject=${subject}&body=${body}`
+    window.open(mailtoLink, '_blank')
+    
+    // Close modal after opening email
+    setTimeout(() => {
+      onClose()
+    }, 500)
   }
 
   return (
@@ -124,79 +86,22 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
       
       <div className="relative bg-background border rounded-lg shadow-lg max-w-md w-full mx-4">
         <div className="flex items-center justify-between p-6 border-b">
-          <h3 className="text-lg font-semibold">Interest Form</h3>
+          <h3 className="text-lg font-semibold">Contact via Email</h3>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>
         
-        <form onSubmit={(e) => {
-          console.log('Form onSubmit event triggered', e)
-          return handleSubmit(e)
-        }} className="p-6 space-y-4">
+        <div className="p-6 space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-4">
-              Interested in trying <strong>{projectTitle}</strong>? Please fill out your information below.
+              Interested in <strong>{projectTitle}</strong>? Click below to send me an email with a pre-filled template.
             </p>
           </div>
 
-          {/* Hidden fields for Web3Forms */}
-          <input type="hidden" name="access_key" value="2c7f7bf7-7d3d-48ff-8dbb-9657938daf4e" />
-          <input type="hidden" name="subject" value={`New Interest Form Submission for ${projectTitle}`} />
-          <input type="hidden" name="project" value={projectTitle} />
-
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-1">
-              Name *
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="Your full name"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email Address *
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="your.email@company.com"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="company" className="block text-sm font-medium mb-1">
-              Company
-            </label>
-            <input
-              type="text"
-              id="company"
-              name="company"
-              className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="Your company name"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="role" className="block text-sm font-medium mb-1">
-              Role
-            </label>
-            <input
-              type="text"
-              id="role"
-              name="role"
-              className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="e.g. Structural Engineer, Project Manager"
-            />
+          <div className="bg-muted/50 p-4 rounded-lg">
+            <p className="text-sm font-medium mb-2">Email will be sent to:</p>
+            <p className="text-sm text-muted-foreground">priyankgodhat121@gmail.com</p>
           </div>
 
           <div className="flex gap-3 pt-4">
@@ -205,32 +110,17 @@ const InterestForm = ({ projectTitle, onClose, onSubmit }) => {
               variant="outline"
               onClick={onClose}
               className="flex-1"
-              disabled={isSubmitting}
             >
               Cancel
             </Button>
             <Button
-              type="submit"
+              onClick={handleEmailClick}
               className="flex-1"
-              disabled={isSubmitting}
             >
-              {isSubmitting ? "Submitting..." : "Submit Interest"}
+              Send Email
             </Button>
           </div>
-
-          {result && (
-            <div className={`text-sm text-center mt-4 ${
-              result === "Form Submitted Successfully" 
-                ? "text-green-600" 
-                : result === "Sending...." 
-                  ? "text-blue-600" 
-                  : "text-red-500"
-            }`}>
-              {result === "Form Submitted Successfully" && "✅ "}
-              {result}
-            </div>
-          )}
-        </form>
+        </div>
       </div>
     </div>
   )
